@@ -1,0 +1,47 @@
+# Render.com service configuration for automated deployments.
+# Replace USERNAME/REPO and any placeholder values before committing.
+
+services:
+  - type: web
+    name: my-node-service
+    env: node
+    repo: https://github.com/Richard-XYZ/REG-SITE-NEW.git
+    branch: main
+    # Instance and scaling
+    instanceType: starter
+    numInstances: 1
+    region: oregon
+    # Build & start steps for automated deployment
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    # Health check and auto-deploy on repo changes
+    healthCheckPath: /
+    autoDeploy: true
+    # Environment variables (use secure: true for secrets)
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      # - key: DATABASE_URL
+      #   value: "postgres://user:pass@host:5432/db" # replace or convert to secure secret
+      #   secure: false
+
+staticSites:
+  - name: sec4future
+    repo: https://github.com/Richard-XYZ/REG-SITE-NEW.git
+    branch: main
+    buildCommand: npm ci && npm run build
+    publishPath: build
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+# cronJobs:
+#   - name: nightly-maintenance
+#     schedule: "0 3 * * *" # run daily at 03:00 UTC
+#     command: npm run nightly
+#     env: node
+#     repo: https://github.com/Richard-XYZ/REG-SITE-NEW.git
+#     branch: main
+#     autoDeploy: true
